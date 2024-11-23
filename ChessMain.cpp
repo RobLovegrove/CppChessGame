@@ -9,7 +9,6 @@ int main() {
 	cout << "========================\n";
 	cout << "Testing the Chess Engine\n";
 	cout << "========================\n\n";
-
 	ChessGame cg;
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';
@@ -30,6 +29,7 @@ int main() {
 	cout << "Alekhine vs. Vasic (1931)\n";
 	cout << "=========================\n\n";
 
+	/*
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';
 
@@ -75,6 +75,6 @@ int main() {
 
 	cg.submitMove("D3", "G6");
 	cout << '\n';
-
+	*/
 	return 0;
 }
