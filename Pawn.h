@@ -8,10 +8,13 @@
 class Pawn: public ChessPiece {
 
  private:
-  bool pawn_not_capturing(Position c, Position t, ChessPiece* b[8][8], int one, int two, int starting_rank );
-  
+  bool handle_not_capturing(Position c, Position t, ChessPiece* b[8][8], int one, int two, int starting_rank );
+  bool handle_capturing(Position c, Position t, ChessPiece* b[8][8], int one);
+
  public:
   Pawn(Colour colour) : ChessPiece(colour) {};
+
+  Type get_type() const override { return Type::PAWN; }
   bool try_move(Position current, Position target, ChessPiece* board[8][8]) override;
   
 };

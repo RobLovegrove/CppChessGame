@@ -10,6 +10,21 @@ int main() {
 	cout << "Testing the Chess Engine\n";
 	cout << "========================\n\n";
 	ChessGame cg;
+	/* CHECKMATE EXAMPLE
+	cg.loadState("8/8/8/5K1k/8/8/8/6R1 w KQkq");
+	cout << '\n';
+
+	cg.submitMove("G1", "H1");
+	cout << '\n';
+	*/
+	/* STALEMATE EXAMPLE
+	cg.loadState("5k2/5P2/4K3/8/8/8/8/8 w KQkq");
+	cout << '\n';
+
+	cg.submitMove("E6", "F6");
+	cout << '\n';
+	*/
+	
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';
 
@@ -29,7 +44,6 @@ int main() {
 	cout << "Alekhine vs. Vasic (1931)\n";
 	cout << "=========================\n\n";
 
-	/*
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';
 
@@ -75,6 +89,6 @@ int main() {
 
 	cg.submitMove("D3", "G6");
 	cout << '\n';
-	*/
+
 	return 0;
 }

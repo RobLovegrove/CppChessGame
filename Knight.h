@@ -10,6 +10,8 @@ class Knight: public ChessPiece {
 
  public:
   Knight(Colour colour) : ChessPiece(colour) {};
+
+  Type get_type() const override { return Type::KNIGHT; }
   bool try_move(Position current, Position target, ChessPiece* board[8][8]) override;
 };
 
