@@ -21,7 +21,7 @@ using namespace std;
 ChessGame::ChessGame() {
   for (int file = 0; file < 8; file++){
     for (int rank = 0; rank < 8; rank++) {
-      board[file][rank] = nullptr;
+      board[file][rank] = nullptr; 
     }
   }
 
@@ -148,7 +148,7 @@ void ChessGame::submitMove(const char* start_square, const char* end_square) {
   }
 }
 
-// HELPER MEHODS
+// HELPER METHODS
 
 void ChessGame::deallocate_memory(int file, int rank) {
   if (board[file][rank] != nullptr) {
