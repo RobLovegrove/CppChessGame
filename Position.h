@@ -19,6 +19,7 @@ class Position {
   int get_rank() { return rank; }
 
   friend bool operator == (const Position& p1, const Position& p2);
+  friend bool operator != (const Position& p1, const Position& p2);
   Position& operator = (const Position& p);
   friend Result operator / (const Position& p1, const Position& p2);
   friend Result operator - (const Position& p1, const Position& p2);

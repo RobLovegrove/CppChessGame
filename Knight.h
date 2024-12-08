@@ -12,7 +12,7 @@ class Knight: public ChessPiece {
   Knight(Colour colour) : ChessPiece(colour) {};
 
   Type get_type() const override { return Type::KNIGHT; }
-  bool try_move(Position current, Position target, ChessPiece* board[8][8]) override;
+  bool try_move(Position current, Position target, ChessPiece* board[8][8], const ChessGame* game, uint8_t* castling = nullptr) override;
 };
 
 #endif

@@ -10,14 +10,17 @@ int main() {
 	cout << "Testing the Chess Engine\n";
 	cout << "========================\n\n";
 	ChessGame cg;
-	/* CHECKMATE EXAMPLE
+	/*
+	// CHECKMATE EXAMPLE
 	cg.loadState("8/8/8/5K1k/8/8/8/6R1 w KQkq");
 	cout << '\n';
 
 	cg.submitMove("G1", "H1");
 	cout << '\n';
-	*/
-	/* STALEMATE EXAMPLE
+
+	cg.submitMove("H5", "H6");
+	cout << '\n';
+	// STALEMATE EXAMPLE
 	cg.loadState("5k2/5P2/4K3/8/8/8/8/8 w KQkq");
 	cout << '\n';
 
@@ -25,6 +28,27 @@ int main() {
 	cout << '\n';
 	*/
 	
+
+	cg.loadState("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq");
+	cout << '\n';
+	cg.submitMove("H1", "E1");
+	cout << '\n';
+
+	cg.submitMove("E8", "H8");
+	cout << '\n';
+
+	cg.submitMove("F1", "H1");
+	cout << '\n';
+
+	cg.submitMove("G8", "H8");
+	cout << '\n';
+
+	cg.submitMove("E1", "G1");
+	cout << '\n';
+
+	cg.print_board();
+
+/*
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';
 
@@ -89,6 +113,6 @@ int main() {
 
 	cg.submitMove("D3", "G6");
 	cout << '\n';
-
+*/
 	return 0;
 }

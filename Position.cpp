@@ -5,6 +5,11 @@ bool operator == (const Position& p1, const Position& p2) {
     return false;
 }
 
+bool operator != (const Position& p1, const Position& p2) {
+    if (p1.file != p2.file || p1.rank != p2.rank) return true;
+    return false;
+}
+
 Position& Position::operator = (const Position& p) {
     if (this == &p) {
         return *this;

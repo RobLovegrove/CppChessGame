@@ -7,7 +7,7 @@ ChessMain.o: ChessMain.cpp ChessGame.h
 ChessGame.o: ChessGame.cpp ChessGame.h Pawn.h Rook.h Knight.h Bishop.h Queen.h King.h Colour.h Position.h
 	g++ -std=c++2a -Wall -g -c ChessGame.cpp
 
-ChessPiece.o: ChessPiece.cpp ChessPiece.h Colour.h Position.h
+ChessPiece.o: ChessPiece.cpp ChessPiece.h Colour.h Position.h ChessGame.h
 	g++ -std=c++2a -Wall -g -c ChessPiece.cpp
 
 Colour.o: Colour.cpp Colour.h
