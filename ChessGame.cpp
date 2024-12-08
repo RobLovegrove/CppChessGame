@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <cassert>
+#include <bitset>
 
 // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq
 
@@ -24,9 +25,8 @@ ChessGame::ChessGame() {
       board[file][rank] = nullptr; 
     }
   }
-
+  
   active_player = Colour::WHITE;
-  state = ChessGame::POSITION;
   game_state = NILL;
 
 }
@@ -42,45 +42,44 @@ ChessGame::~ChessGame() {
 
 // METHODS
 
-void ChessGame::loadState(const char* current_position) {
+void ChessGame::loadState(const char* current_char) {
 
-  state = POSITION;
   game_state = NILL;
   
   int rank = 7;
   int file = 0;
   
-  for (int i = 0; current_position[i] != '\0'; i++) {
+  for (int i = 0; current_char[i] != '\0'; i++) {    
 
-    if (state == POSITION) {
-      load_position(current_position[i], file, rank);
+    if (!game_state) { //If gamestate NILL, parse piece position
+      load_position(current_char[i], file, rank);
     }
     
-    else if (state == ACTIVE_PLAYER) {
-
-      if (current_position[i] == 'w') {
+    else if (game_state & LOADING_ACTIVE_PLAYER) {
+      if (current_char[i] == 'w') {
 	      active_player = Colour::WHITE;
-	      state = CASTLING;
+	      game_state |= LOADING_CASTLING_RIGHTS;
+        game_state &= ~LOADING_ACTIVE_PLAYER;
       }
-      else if (current_position[i] == 'b') {
-	      active_player = Colour::BLACK;
-	      state = CASTLING;
+      else if (current_char[i] == 'b') {
+	      game_state |= LOADING_CASTLING_RIGHTS;
+        game_state &= ~LOADING_ACTIVE_PLAYER;
       }
     }
     
-    else if (state == CASTLING) {
+    else if (game_state & LOADING_CASTLING_RIGHTS) {
       
-      if (current_position[i] == '-') {
-        // Already set game state to no castling rights
+      if (current_char[i] == '-') {
+        // Castling rights set to none as default
         loading_complete();
         return;
       }
 
       // Add castling rights
-      if (current_position[i] == 'K') game_state |= WHITE_KINGSIDE;
-      else if (current_position[i] == 'Q') game_state |= WHITE_QUEENSIDE;
-      else if (current_position[i] == 'k') game_state |= BLACK_KINGSIDE;
-      else if (current_position[i] == 'q') game_state |= BLACK_QUEENSIDE;
+      if (current_char[i] == 'K') game_state |= WHITE_KINGSIDE;
+      else if (current_char[i] == 'Q') game_state |= WHITE_QUEENSIDE;
+      else if (current_char[i] == 'k') game_state |= BLACK_KINGSIDE;
+      else if (current_char[i] == 'q') game_state |= BLACK_QUEENSIDE;
     }
   }
   loading_complete();
@@ -247,7 +246,7 @@ void ChessGame::load_position(char c, int& file, int& rank) {
     assign_piece(uppercase, file, rank, Colour::BLACK);
   }
   
-  if (rank == 0 && file == 8) state = ACTIVE_PLAYER;
+  if (rank == 0 && file == 8) game_state |= LOADING_ACTIVE_PLAYER;
       
 }
 

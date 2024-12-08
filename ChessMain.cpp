@@ -28,12 +28,13 @@ int main() {
 	cout << '\n';
 	*/
 	
-
+/*
 	cg.loadState("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq");
 	cout << '\n';
 	cg.submitMove("H1", "E1");
 	cout << '\n';
 
+	cg.print_board();
 	cg.submitMove("E8", "H8");
 	cout << '\n';
 
@@ -47,8 +48,8 @@ int main() {
 	cout << '\n';
 
 	cg.print_board();
+*/
 
-/*
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';
 
@@ -113,6 +114,6 @@ int main() {
 
 	cg.submitMove("D3", "G6");
 	cout << '\n';
-*/
+
 	return 0;
 }

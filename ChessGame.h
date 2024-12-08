@@ -6,20 +6,32 @@
 #include "Colour.h"
 #include "Position.h"
 
-const uint8_t GAME_OVER = 0b10000;
-const uint8_t WHITE_KINGSIDE = 0b01000;
-const uint8_t WHITE_QUEENSIDE = 0b00100;
-const uint8_t BLACK_KINGSIDE = 0b00010;
-const uint8_t BLACK_QUEENSIDE = 0b00001;
-const uint8_t NILL = 0b00000;
+/*
+Most significant bit to least significant bit:
+Game over flag - set to one if game is over
+White kingside flag - set to one if white can castle kignside
+White queenside flag - set to one if white can castle queenside
+Black kingside flag - set to one if black can castle kignside
+Black queenside flag - set to one if black can castle queenside
+Loading active player flag - set to one if loading active player
+Loading castling rights flag - set to one if loading castling rights
+
+*/
+
+const uint8_t GAME_OVER = 0b1000000;
+const uint8_t WHITE_KINGSIDE = 0b0100000;
+const uint8_t WHITE_QUEENSIDE = 0b0010000;
+const uint8_t BLACK_KINGSIDE = 0b0001000;
+const uint8_t BLACK_QUEENSIDE = 0b0000100;
+const uint8_t LOADING_ACTIVE_PLAYER = 0b0000010;
+const uint8_t LOADING_CASTLING_RIGHTS = 0b0000001;
+const uint8_t NILL = 0b0000000;
 
 class ChessGame {
 
  private:
   ChessPiece* board[8][8];
   Colour active_player;
-
-  enum {POSITION, ACTIVE_PLAYER, CASTLING} state;
 
   uint8_t game_state;
   uint8_t attempting_castling = NILL;
@@ -36,7 +48,7 @@ class ChessGame {
   bool can_move(Colour active_player, ChessPiece* b[8][8]);
 
  public:
-  void loadState(const char* current_position);
+  void loadState(const char* current_char);
   void submitMove(const char* start_square, const char* end_square);
   bool is_check(Colour _active_player, ChessPiece* b[8][8]) const;
 
