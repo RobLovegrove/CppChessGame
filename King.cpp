@@ -61,13 +61,13 @@ bool King::handle_castling(int df, int dr, ChessPiece* b[8][8], int r, const Che
   // Check if king moves through check 
   for (int i = 0; i < 3; i++) {
     if (i == 0) {
-      if (g->is_check(this->colour, b)) return false;
+      if (g->is_check(b)) return false;
     }
     else {
       // Move king to next square
       tmp_board[4 + (i*increment)][r] = tmp_board[4 + ((i-1)*increment)][r];
       tmp_board[4 + ((i-1)*increment)][r] = nullptr;
-      if (g->is_check(this->colour, tmp_board)) return false;
+      if (g->is_check(tmp_board)) return false;
     }
   }
 

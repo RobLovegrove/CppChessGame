@@ -10,7 +10,7 @@ int main() {
 	cout << "Testing the Chess Engine\n";
 	cout << "========================\n\n";
 	ChessGame cg;
-	/*
+	
 	// CHECKMATE EXAMPLE
 	cg.loadState("8/8/8/5K1k/8/8/8/6R1 w KQkq");
 	cout << '\n';
@@ -26,9 +26,9 @@ int main() {
 
 	cg.submitMove("E6", "F6");
 	cout << '\n';
-	*/
-	
-/*
+
+
+	/*
 	cg.loadState("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq");
 	cout << '\n';
 	cg.submitMove("H1", "E1");

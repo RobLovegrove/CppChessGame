@@ -1,6 +1,8 @@
 #ifndef POSITION_H
 #define POSITION_H
 
+#include <iostream>
+
 class Position {
 
  private:
@@ -23,6 +25,7 @@ class Position {
   Position& operator = (const Position& p);
   friend Result operator / (const Position& p1, const Position& p2);
   friend Result operator - (const Position& p1, const Position& p2);
+  friend std::ostream& operator << (std::ostream& os, Position position);
 
   Position(int file, int rank) : file(file), rank(rank) {}
 };

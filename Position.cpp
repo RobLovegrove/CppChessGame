@@ -35,3 +35,8 @@ Position::Result operator - (const Position& p1, const Position& p2) {
 
     return {0, df, dr}; // Return the structure with all values
 }
+
+std::ostream& operator << (std::ostream& os, Position position) {
+    os << static_cast<char>(position.file + 'A') << position.rank + 1;
+    return os;
+}
