@@ -16,8 +16,6 @@ int main() {
 	cout << '\n';
 
 	cg.submitMove("G1", "H1");
-	cout << '\n';
-
 	cg.submitMove("H5", "H6");
 	cout << '\n';
 
@@ -34,28 +32,40 @@ int main() {
 	cout << '\n';
 
 	cg.submitMove("H1", "E1");
-	cout << '\n';
-
 	cg.submitMove("H8", "E8");
 	cout << '\n';
-
-	cg.print_board();
 
 	// Queenside with King
 	cg.loadState("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq");
 	cout << '\n';
 
 	cg.submitMove("E1", "A1");
-	cout << '\n';
-
 	cg.submitMove("E8", "B8");
 	cout << '\n';
 
-	cg.print_board();
+	// Queenside through check
+	cg.loadState("r3k2r/8/4R3/8/8/r7/8/R3K2R w KQkq");
+	cout << '\n';
 
+	cg.submitMove("E1", "A1");
+	cg.submitMove("E8", "B8");
+	cout << '\n';
+	
+	// Queenside through check
+	cg.loadState("rnbqkbnr/pppppppp/8/8/8/5r2/8/R3K2R w KQkq");
+	cout << '\n';
 
-	// PRE GIVEN MAIN TESTS
+	cg.submitMove("E1", "G1");
+	cout << '\n';
 
+	// Queenside through check
+	cg.loadState("rnbqkbnr/pppppppp/8/8/8/3r4/8/R3K2R w KQkq");
+	cout << '\n';
+
+	cg.submitMove("E1", "A1");
+	cout << '\n';
+
+	// PRE GIVEN TESTS
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';
 

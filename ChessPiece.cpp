@@ -25,7 +25,7 @@ ostream& operator << (ostream& os, Type type) {
         os << "King";
         break;
         default:
-        cout << "Error: Invalid Chess Type found when trying to output to console";
+        cout << "Error: Invalid Type found when trying to output to console";
     }
     return os;
 }

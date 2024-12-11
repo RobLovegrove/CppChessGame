@@ -44,17 +44,19 @@ class ChessGame {
 
   /* SUBMIT MOVE HELPER FUNCTIONS */
   bool is_valid_square(const char*) const;
-  bool is_legal_move(ChessPiece* chess_piece, ChessPiece* opponent_piece, Position start, Position end);
-  bool try_move(ChessPiece* chess_piece, Position start, Position end, ChessPiece* b[8][8], bool output);
+  bool is_legal_move(Position start, Position end, const bool output);
+  bool check_basic_rules(Position start, Position end, const bool output) const;
+  bool is_castling_legal(Position start, Position end, const bool output);
+
   bool is_check(ChessPiece* b[8][8]) const;
   bool can_move();
 
+  void update_castling_rights(Position start, Position end);
   void castle();
-  void make_move(ChessPiece* chess_piece, ChessPiece* opponent_piece, Position start, Position end);
-  void update_castling_rights(ChessPiece* chess_piece, ChessPiece* opponent_piece, Position start);
+  void make_move(Position start, Position end);
 
-  void output_successful_move(ChessPiece* chess_piece, ChessPiece* opponent_piece, Position start, Position end);
-  void output_unsuccessful_move(ChessPiece* chess_piece, Position start, Position end);
+  void output_successful_move(Position start, Position end) const;
+  void output_unsuccessful_move(Position start, Position end) const;
 
  public:
   void loadState(const char* current_char);
