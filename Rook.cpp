@@ -2,7 +2,7 @@
 #include "ChessGame.h"
 using namespace std;
 
-bool Rook::try_move(Position current, Position target, ChessPiece* board[8][8], const ChessGame* game, uint8_t* castling) {
+bool Rook::try_move(Position current, Position target, ChessPiece* board[8][8], uint8_t* castling) {
 
   if (current == target) return false;
 
@@ -18,7 +18,7 @@ bool Rook::try_move(Position current, Position target, ChessPiece* board[8][8], 
   if (target_piece != nullptr) {
     if (target_piece->get_type() == Type::KING && target_piece->get_colour() == this->colour) {
       if (target.get_rank() == rank && target.get_file() == 4) {
-        return handle_rook_castling(result.delta_file, result.delta_rank, current, board, rank, game, castling);
+        return handle_rook_castling(result.delta_file, result.delta_rank, current, board, rank, castling);
       }
       return false;
     }
@@ -72,7 +72,7 @@ bool Rook::handle_rank_move(Position current, Position target, ChessPiece* board
   return false;
 }
 
-bool Rook::handle_rook_castling(int df, int dr, Position start, ChessPiece* b[8][8], int r, const ChessGame* g, uint8_t* c) {
+bool Rook::handle_rook_castling(int df, int dr, Position start, ChessPiece* b[8][8], int r, uint8_t* c) {
   
   int increment = df / abs(df);
   int distance_to_edge;
@@ -84,27 +84,6 @@ bool Rook::handle_rook_castling(int df, int dr, Position start, ChessPiece* b[8]
   // Check path to corner is clear
   for (int i = 1; i < distance_to_edge; i++) {
     if (b[4 - (i * increment)][r] != nullptr) return false;
-  }
-
-  // Make a tmp board
-  ChessPiece* tmp_board[8][8];
-  for (int x = 0; x < 8; x++) {
-    for (int y = 0; y < 8; y++) {
-      tmp_board[x][y] = b[x][y];
-    }
-  }
-
-  // Check if king moves through check 
-  for (int i = 0; i < 3; i++) {
-    if (i == 0) {
-      if (g->is_check(b)) return false;
-    }
-    else {
-      // Move king to next square
-      tmp_board[4 - (i*increment)][r] = tmp_board[4 - ((i-1)*increment)][r];
-      tmp_board[4 - ((i-1)*increment)][r] = nullptr;
-      if (g->is_check(tmp_board)) return false;
-    }
   }
 
   if (c != nullptr) {

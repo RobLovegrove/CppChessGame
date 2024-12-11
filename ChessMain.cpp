@@ -20,6 +20,7 @@ int main() {
 
 	cg.submitMove("H5", "H6");
 	cout << '\n';
+
 	// STALEMATE EXAMPLE
 	cg.loadState("5k2/5P2/4K3/8/8/8/8/8 w KQkq");
 	cout << '\n';
@@ -27,28 +28,33 @@ int main() {
 	cg.submitMove("E6", "F6");
 	cout << '\n';
 
-
-	/*
+	// CASTLING EXAMPLE
+	// Kingside with rook
 	cg.loadState("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq");
 	cout << '\n';
+
 	cg.submitMove("H1", "E1");
 	cout << '\n';
 
-	cg.print_board();
-	cg.submitMove("E8", "H8");
-	cout << '\n';
-
-	cg.submitMove("F1", "H1");
-	cout << '\n';
-
-	cg.submitMove("G8", "H8");
-	cout << '\n';
-
-	cg.submitMove("E1", "G1");
+	cg.submitMove("H8", "E8");
 	cout << '\n';
 
 	cg.print_board();
-*/
+
+	// Queenside with King
+	cg.loadState("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq");
+	cout << '\n';
+
+	cg.submitMove("E1", "A1");
+	cout << '\n';
+
+	cg.submitMove("E8", "B8");
+	cout << '\n';
+
+	cg.print_board();
+
+
+	// PRE GIVEN MAIN TESTS
 
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';

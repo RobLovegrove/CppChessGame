@@ -4,7 +4,7 @@
 
 using namespace std;
 
-bool Knight::try_move(Position current, Position target, ChessPiece* board[8][8], const ChessGame* game, uint8_t* castling) {
+bool Knight::try_move(Position current, Position target, ChessPiece* board[8][8], uint8_t* castling) {
 
   if (current == target) return false;
  

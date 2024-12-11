@@ -37,7 +37,7 @@ ChessGame::~ChessGame() {
   }
 }
 
-// METHODS
+/* LOAD STATE FUNCTIONS */
 
 void ChessGame::loadState(const char* current_char) {
 
@@ -83,144 +83,18 @@ void ChessGame::loadState(const char* current_char) {
   loading_complete();
 }
 
-void ChessGame::submitMove(const char* start_square, const char* end_square) {
-  // Check move string format is correct and within board limits
-  if (!is_valid_square(start_square) || !is_valid_square(end_square)) {
-    cout << "Invalid square" << endl;
-    return;
-  }
 
-  // Convert sqaure to Position class
-  Position start(start_square[0] - 'A', start_square[1] - '1');
-  Position end(end_square[0] - 'A', end_square[1] - '1');
+/* LOAD STATE HELPER FUNCTIONS */
 
-  ChessPiece* chess_piece = board[start.get_file()][start.get_rank()];
-  ChessPiece* target_piece = board[end.get_file()][end.get_rank()];
 
-  // Check if move is a legal chess move
-  if (is_legal_move(chess_piece, target_piece, start, end)) {
-     
-    if (attempting_castling != NILL) {
-      // Castling
-      switch (attempting_castling)
-      {
-      case WHITE_KINGSIDE:
-        // Move king
-        board[6][0] = board[4][0];
-        board[4][0] = nullptr;
-        // Move rook
-        board[5][0] = board[7][0];
-        board[7][0] = nullptr;
-        cout << chess_piece->get_colour() << " castles kingside";
-        break;
-      case WHITE_QUEENSIDE:
-        // Move king
-        board[2][0] = board[4][0];
-        board[4][0] = nullptr;
-        // Move rook
-        board[3][0] = board[0][0];
-        board[0][0] = nullptr;
-        cout << chess_piece->get_colour() << " castles queenside";
-        break;
-      case BLACK_KINGSIDE:
-        // Move king
-        board[6][7] = board[4][7];
-        board[4][7] = nullptr;
-        // Move rook
-        board[5][7] = board[7][7];
-        board[7][7] = nullptr;
-        cout << chess_piece->get_colour() << " castles kingside";
-        break;
-      case BLACK_QUEENSIDE:
-        // Move king
-        board[2][7] = board[4][7];
-        board[4][7] = nullptr;
-        // Move rook
-        board[3][7] = board[0][7];
-        board[0][7] = nullptr;
-        cout << chess_piece->get_colour() << " castles queenside";
-        break;
-      default:
-        cout << "Error not passed correct castling type";
-        break;
-      }
-      // Reset attempting_castling
-      attempting_castling = NILL;
-    }
-    else {
-      output_successful_move(chess_piece, target_piece, start, end);
-
-      // Remove captured piece from board
-      if (target_piece != nullptr) {
-        delete target_piece;
-        target_piece = nullptr;
-      }
-
-      // Make move
-      board[end.get_file()][end.get_rank()] = chess_piece;
-      board[start.get_file()][start.get_rank()] = nullptr;
-
-    }
-
-    // Bitwise removal of castling rights on king move
-    if (chess_piece->get_type() == Type::KING) {
-      if (game_state & BLACKS_TURN) game_state &= ~(BLACK_KINGSIDE | BLACK_QUEENSIDE);
-      else game_state &= ~(WHITE_KINGSIDE | WHITE_QUEENSIDE);
-    }
-
-    // Update castling state on rook move
-    if (chess_piece->get_type() == Type::ROOK) {
-      if (target_piece != nullptr) {
-        if (*target_piece == (game_state & BLACKS_TURN) && target_piece->get_type() == Type::KING) {
-          // Castling by moving rook onto own king, so remove all castling rights
-          if (game_state & BLACKS_TURN) game_state &= ~(BLACK_KINGSIDE | BLACK_QUEENSIDE);
-          else game_state &= ~(WHITE_KINGSIDE | WHITE_QUEENSIDE);
-        }
-      } 
-      else {
-        int rank;
-        (game_state & BLACKS_TURN) ? rank = 7 : rank = 0;
-        if (start == Position(0, rank)) {
-          // Btiwise removal of queenside castling rights
-          if (game_state & BLACKS_TURN) game_state &= ~BLACK_QUEENSIDE;
-          else game_state &= ~WHITE_QUEENSIDE;
-        }
-        else if (start == Position(7, rank)) {
-          // Btiwise removal of kingside castling rights
-          if (game_state & BLACKS_TURN) game_state &= ~BLACK_KINGSIDE;
-          else game_state &= ~WHITE_KINGSIDE;
-        }
-      }
-    }
-
-    // Move successfully made, change current player
-    if (game_state & BLACKS_TURN) game_state &= ~BLACKS_TURN;
-    else game_state |= BLACKS_TURN;
-
-    // Check if new active_player is in check
-    if (is_check(board)) {
-      cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in check";
-      if (!can_move(board)) {
-        cout << "mate";
-        game_state |= GAME_OVER;
-      }
-      cout << endl;
-    }
-    else if (!can_move(board)) {
-      cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in stalemate" << endl;
-      game_state |= GAME_OVER;
-    }
-  }
-}
-
-// HELPER METHODS
-void ChessGame::deallocate_memory(int file, int rank) {
+void ChessGame::deallocate_memory(const int file, const int rank) {
   if (board[file][rank] != nullptr) {
     delete board[file][rank];
   }
 }
 
-void ChessGame::load_position(char c, int& file, int& rank) {
+void ChessGame::load_position(const char c, int& file, int& rank) {
+
   if (c == '/') {
     rank--;
     file = 0;
@@ -240,7 +114,7 @@ void ChessGame::load_position(char c, int& file, int& rank) {
   }
   
   if (c >= 'b' && c <= 'r') {
-    char uppercase = c - 32; // Converts lowercase char to uppercase char
+    char uppercase = toupper(c);
     assign_piece(uppercase, file, rank, Colour::BLACK);
   }
   
@@ -248,7 +122,7 @@ void ChessGame::load_position(char c, int& file, int& rank) {
       
 }
 
-void ChessGame::assign_piece(char c, int &file, int rank, Colour colour) {
+void ChessGame::assign_piece(const char c, int &file, const int rank, const Colour &colour) {
 
   deallocate_memory(file, rank);
 
@@ -309,20 +183,76 @@ void ChessGame::assign_piece(char c, int &file, int rank, Colour colour) {
 
 void ChessGame::loading_complete() {
   cout << "A new board state is loaded!" << endl;
+
+  // Check whether the newly loaded game is already in checkmate/stalemate 
   if (is_check(board)) {
-    if (!can_move(board)) {
+    if (!can_move()) {
       cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in checkmate";
       game_state |= GAME_OVER;
     }
     cout << endl;
   }
-  else if (!can_move(board)) {
+  else if (!can_move()) {
     cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in stalemate" << endl;
     game_state |= GAME_OVER;
   }
 }
 
-bool ChessGame::is_valid_square(const char* sqaure) {
+
+
+
+/* SUBMIT MOVE FUNCTIONS */
+
+void ChessGame::submitMove(const char* start_square, const char* end_square) {
+  
+  // Check move string format is correct and within board limits
+  if (!is_valid_square(start_square) || !is_valid_square(end_square)) {
+    cout << "Invalid square" << endl;
+    return;
+  }
+
+  // Convert sqaure to Position class
+  Position start(start_square[0] - 'A', start_square[1] - '1');
+  Position end(end_square[0] - 'A', end_square[1] - '1');
+
+  ChessPiece* chess_piece = board[start.get_file()][start.get_rank()];
+  ChessPiece* opponent_piece = board[end.get_file()][end.get_rank()];
+
+  // Check if move is a legal chess move
+  if (is_legal_move(chess_piece, opponent_piece, start, end)) {
+     
+    if (attempting_castling != NILL) {
+      castle();
+    }
+    else {
+      make_move(chess_piece, opponent_piece, start, end);
+    }
+
+    update_castling_rights(chess_piece, opponent_piece, start);
+
+    // Change active player
+    if (game_state & BLACKS_TURN) game_state &= ~BLACKS_TURN;
+    else game_state |= BLACKS_TURN;
+
+    // Check if new active player is in check/checkmate/stalemate
+    if (is_check(board)) {
+      cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in check";
+      if (!can_move()) {
+        cout << "mate";
+        game_state |= GAME_OVER;
+      }
+      cout << endl;
+    }
+    else if (!can_move()) {
+      cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in stalemate" << endl;
+      game_state |= GAME_OVER;
+    }
+  }
+}
+
+/* SUBMIT MOVE HELPER FUNCTIONS */
+
+bool ChessGame::is_valid_square(const char* sqaure) const {
 
   if (strlen(sqaure) != 2) return false;
   if (sqaure[0] < 'A' || sqaure[0] > 'H') return false;
@@ -341,8 +271,7 @@ bool ChessGame::is_legal_move(ChessPiece* chess_piece, ChessPiece* opponent_piec
 
   // No piece at starting location
   if (chess_piece == nullptr) {
-    cout << "There is no piece at position " << static_cast<char>(start.get_file() + 'A');
-    cout << start.get_rank() + 1 << "!" << endl;
+    cout << "There is no piece at position " << start << "!" << endl;
     return false;
   }
 
@@ -373,6 +302,155 @@ bool ChessGame::is_legal_move(ChessPiece* chess_piece, ChessPiece* opponent_piec
 
 }
 
+void ChessGame::castle() {
+
+  // Determine castling direction
+  int rank = 0, king_end = 2, rook_start = 0, rook_end = 3;
+  char side[10] = "queenside";
+  if (game_state & BLACKS_TURN) rank = 7;
+  if (attempting_castling & WHITE_KINGSIDE || attempting_castling & BLACK_KINGSIDE) {
+    king_end = 6;
+    rook_start = 7;
+    rook_end = 5;
+    strcpy (side, "kingside");
+  }
+
+  // Move king
+  board[king_end][rank] = board[4][rank];
+  board[4][rank] = nullptr;
+
+  // Move rook
+  board[rook_end][rank] = board[rook_start][rank];
+  board[rook_start][rank] = nullptr;
+
+  // Output player castling
+  cout << static_cast<Colour>(game_state & BLACKS_TURN) << " castles " << side;
+  if (game_state & BLACKS_TURN) cout << endl;
+
+  // Reset attempting_castling
+  attempting_castling = NILL;
+}
+
+void ChessGame::make_move(ChessPiece* chess_piece, ChessPiece* opponent_piece, Position start, Position end) {
+        
+  output_successful_move(chess_piece, opponent_piece, start, end);
+
+  // Remove captured piece from board
+  if (opponent_piece != nullptr) {
+    delete opponent_piece;
+    opponent_piece = nullptr;
+  }
+
+  // Make move
+  board[end.get_file()][end.get_rank()] = chess_piece;
+  board[start.get_file()][start.get_rank()] = nullptr;
+}
+
+void ChessGame::update_castling_rights(ChessPiece* chess_piece, ChessPiece* opponent_piece, Position start) {
+  // Bitwise removal of castling rights on king move
+  if (chess_piece->get_type() == Type::KING) {
+    if (game_state & BLACKS_TURN) game_state &= ~(BLACK_KINGSIDE | BLACK_QUEENSIDE);
+    else game_state &= ~(WHITE_KINGSIDE | WHITE_QUEENSIDE);
+  }
+
+  // Update castling state on rook move
+  if (chess_piece->get_type() == Type::ROOK) {
+    if (opponent_piece != nullptr) {
+      if (*opponent_piece == (game_state & BLACKS_TURN) && opponent_piece->get_type() == Type::KING) {
+        // Castling by moving rook onto own king, so remove all castling rights
+        if (game_state & BLACKS_TURN) game_state &= ~(BLACK_KINGSIDE | BLACK_QUEENSIDE);
+        else game_state &= ~(WHITE_KINGSIDE | WHITE_QUEENSIDE);
+      }
+    } 
+    else {
+      int rank;
+      (game_state & BLACKS_TURN) ? rank = 7 : rank = 0;
+      if (start == Position(0, rank)) {
+        // Btiwise removal of queenside castling rights
+        if (game_state & BLACKS_TURN) game_state &= ~BLACK_QUEENSIDE;
+        else game_state &= ~WHITE_QUEENSIDE;
+      }
+      else if (start == Position(7, rank)) {
+        // Btiwise removal of kingside castling rights
+        if (game_state & BLACKS_TURN) game_state &= ~BLACK_KINGSIDE;
+        else game_state &= ~WHITE_KINGSIDE;
+      }
+    }
+  }
+}
+
+bool ChessGame::try_move(ChessPiece* chess_piece, Position start, Position end, ChessPiece* b[8][8], bool output) {
+  
+  if (!chess_piece->try_move(start, end, b, &attempting_castling)) {
+
+    // ChessPiece cannot path form start to end
+    if (output) output_unsuccessful_move(chess_piece, start, end);
+    return false;
+  }
+
+  // Check if trying to castle
+  if (attempting_castling != NILL) {
+
+    // Check if king has appropriate castling rights
+    // Attempting_castling changed by King/Rook if castling deemed possible by ChessPiece
+    if (!(game_state & attempting_castling)) { 
+      if (output) output_unsuccessful_move(chess_piece, start, end);
+      // Reset attempting_castling and return false
+      attempting_castling = NILL;
+      return false;
+    }
+
+    int rank = 0, increment = -1;
+    if (game_state & BLACKS_TURN) rank = 7;
+    if (attempting_castling & WHITE_KINGSIDE || attempting_castling & BLACK_KINGSIDE) {
+      increment = 1;
+    }
+
+    // Make a tmp board
+    ChessPiece* tmp_board[8][8];
+    for (int x = 0; x < 8; x++) {
+      for (int y = 0; y < 8; y++) {
+        tmp_board[x][y] = b[x][y];
+      }
+    }
+    // Check if king starts in check
+    if (is_check(tmp_board)) {
+      attempting_castling = NILL;
+      return false;
+    }
+    for (int i = 1; i < 3; i++) {
+      // Move king to next square and check if king now in check
+      tmp_board[4 + (i*increment)][rank] = tmp_board[4 + (i*increment)][rank];
+      tmp_board[4 + (i*increment)][rank] = nullptr;
+      if (is_check(tmp_board)) {
+        attempting_castling = NILL;
+        return false;
+      }
+    }
+    return true;
+  }
+
+  else {
+    // Not castling so check if move puts self in check
+    ChessPiece* tmp_board[8][8];
+    for (int file = 0; file < 8; file++) {
+      for (int rank = 0; rank < 8; rank++) {
+        tmp_board[file][rank] = b[file][rank];
+      }
+    }
+    // Make move on tmp_board
+    tmp_board[end.get_file()][end.get_rank()] = chess_piece;
+    tmp_board[start.get_file()][start.get_rank()] = nullptr;
+
+    // Ensure move does not put self in check
+    if (is_check(tmp_board)) {
+      if (output) output_unsuccessful_move(chess_piece, start, end);
+      return false;
+    }
+  }
+  return true;
+}
+
 void ChessGame::output_successful_move(ChessPiece* chess_piece, ChessPiece* opponent_piece, Position start, Position end) {
 
   cout << *chess_piece << " moves from " << start << " to " << end;
@@ -390,6 +468,7 @@ bool ChessGame::is_check(ChessPiece* b[8][8]) const {
   ChessPiece* king = nullptr;
   Position king_position(-1, -1); 
 
+  // Find king's position
   for (int file = 0; file < 8; file++) {
     for (int rank = 0; rank < 8; rank++) {
       if (b[file][rank] != nullptr) {
@@ -410,61 +489,23 @@ bool ChessGame::is_check(ChessPiece* b[8][8]) const {
   for (int rank = 0; rank < 8; rank++) {
     for (int file = 0; file < 8; file++) {
       if (b[file][rank] != nullptr && *b[file][rank] != (game_state & BLACKS_TURN)) {
-        if (b[file][rank]->try_move(Position(file, rank), king_position, b, this)) return true;
+        if (b[file][rank]->try_move(Position(file, rank), king_position, b)) return true;
       }
     }
   }
   return false;
 }
 
-bool ChessGame::try_move(ChessPiece* chess_piece, Position start, Position end, ChessPiece* b[8][8], bool output) {
-  
-  if (chess_piece->try_move(start, end, b, this, &attempting_castling)) {
-
-    // Check if trying to castle
-    if (attempting_castling != NILL) {
-      // Trying to castle 
-      // Direction and colour of castling set by king/rook to attempting_castling
-      if (!(game_state & attempting_castling)) { 
-        if (output) output_unsuccessful_move(chess_piece, start, end);
-        attempting_castling = NILL;
-        return false;
-      }
-    }
-    else {
-      // Not castling so check if move puts self in check
-      ChessPiece* tmp_board[8][8];
-      for (int file = 0; file < 8; file++) {
-        for (int rank = 0; rank < 8; rank++) {
-          tmp_board[file][rank] = b[file][rank];
-        }
-      }
-      // Make move on tmp_board
-      tmp_board[end.get_file()][end.get_rank()] = chess_piece;
-      tmp_board[start.get_file()][start.get_rank()] = nullptr;
-
-      // Ensure move does not put self in check
-      if (is_check(tmp_board)) {
-        if (output) output_unsuccessful_move(chess_piece, start, end);
-        return false;
-      }
-    }
-    return true;
-  }
-  
-  if (output) output_unsuccessful_move(chess_piece, start, end);
-  return false;
-}
-
-bool ChessGame::can_move(ChessPiece* b[8][8]) {
+bool ChessGame::can_move() {
 
   // Find next active piece
   for (int file = 0; file < 8; file++) {
     for (int rank = 0; rank < 8; rank++) {
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-          if (b[file][rank] != nullptr && *b[file][rank] == (game_state & BLACKS_TURN)) {
-            if (try_move(b[file][rank], Position(file, rank), Position(i, j), b, false)) return true;
+          // ChessPiece == operator overloaded to compare piece colour with active_player flag
+          if (board[file][rank] != nullptr && *board[file][rank] == (game_state & BLACKS_TURN)) {
+            if (try_move(board[file][rank], Position(file, rank), Position(i, j), board, false)) return true;
           }
         }
       }
@@ -472,6 +513,7 @@ bool ChessGame::can_move(ChessPiece* b[8][8]) {
   }  
   return false;
 }
+
 
 void ChessGame::print_board() {
   for (int rank = 7; rank >= 0; rank --){
@@ -485,4 +527,5 @@ void ChessGame::print_board() {
     }
     cout << endl;
   }
+  cout << endl;
 }

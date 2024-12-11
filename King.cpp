@@ -5,7 +5,7 @@
 
 using namespace std;
 
-bool King::try_move(Position current, Position target, ChessPiece* board[8][8], const ChessGame* game, uint8_t* castling) {
+bool King::try_move(Position current, Position target, ChessPiece* board[8][8], uint8_t* castling) {
 
   if (current == target) return false;
 
@@ -22,8 +22,8 @@ bool King::try_move(Position current, Position target, ChessPiece* board[8][8], 
   // Handle castling
   if (current.get_rank() == rank && current.get_file() == 4) {
     if (abs(result.delta_file) >= 2 && result.delta_rank == 0) {
-      // Castling by moving king two or more squares laterally
-      return handle_castling(result.delta_file, result.delta_rank, board, rank, game, castling);
+      // Castling by moving king two or more squares horizontally
+      return handle_castling(result.delta_file, result.delta_rank, board, rank, castling);
     }
   }
 
@@ -34,7 +34,7 @@ bool King::try_move(Position current, Position target, ChessPiece* board[8][8], 
   return false;
 }
 
-bool King::handle_castling(int df, int dr, ChessPiece* b[8][8], int r, const ChessGame* g, uint8_t* c) {
+bool King::handle_castling(int df, int dr, ChessPiece* b[8][8], int r, uint8_t* c) {
   
   int increment = df / abs(df);
   int distance_to_edge;
@@ -48,27 +48,6 @@ bool King::handle_castling(int df, int dr, ChessPiece* b[8][8], int r, const Che
   // Check path to corner is clear
   for (int i = 1; i < distance_to_edge; i++) {
     if (b[4 + (i * increment)][r] != nullptr) return false;
-  }
-
-  // Make a tmp board
-  ChessPiece* tmp_board[8][8];
-  for (int x = 0; x < 8; x++) {
-    for (int y = 0; y < 8; y++) {
-      tmp_board[x][y] = b[x][y];
-    }
-  }
-
-  // Check if king moves through check 
-  for (int i = 0; i < 3; i++) {
-    if (i == 0) {
-      if (g->is_check(b)) return false;
-    }
-    else {
-      // Move king to next square
-      tmp_board[4 + (i*increment)][r] = tmp_board[4 + ((i-1)*increment)][r];
-      tmp_board[4 + ((i-1)*increment)][r] = nullptr;
-      if (g->is_check(tmp_board)) return false;
-    }
   }
 
   if (c != nullptr) {
