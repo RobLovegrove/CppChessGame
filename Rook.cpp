@@ -1,4 +1,5 @@
 #include "Rook.h"
+#include "King.h"
 #include "ChessGame.h"
 using namespace std;
 
@@ -7,12 +8,13 @@ bool Rook::try_move(
 
   ChessPiece* target_piece = b[end.get_file()][end.get_rank()];
 
-  // Handle castling by rook moving onto own king
   Position::Result result = start - end;
   int rank;
   (this->colour == Colour::WHITE) ? rank = 0 : rank = 7;
+
+  // Handle castling by rook moving onto own king
   if (target_piece != nullptr) {
-    if (target_piece->get_type() == Type::KING && 
+    if (dynamic_cast<King*>(target_piece) && 
         target_piece->get_colour() == this->colour) {
       if (end.get_rank() == rank && end.get_file() == 4) {
         return handle_rook_castling(
@@ -66,6 +68,7 @@ bool Rook::handle_rank_move(
   Position start, Position end, ChessPiece* board[8][8], int direction) {  
 
   ChessPiece* target_piece = board[end.get_file()][end.get_rank()];
+
   int distance = abs(end.get_rank() - start.get_rank());
   int file = start.get_file();
 
@@ -97,6 +100,10 @@ bool Rook::handle_rook_castling(
     if (b[4 - (i * increment)][rank] != nullptr) return false;
   }
 
+  /* 
+  Update ChessGame's attempting_castling attribute by setting flag 
+  corresponding to the colour and direction to 1
+  */
   if (castling != nullptr) {
     if (increment > 0) {
       (this->colour == Colour::WHITE) 

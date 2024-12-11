@@ -16,18 +16,22 @@ bool Pawn::try_move(
   // Not capturing piece
   if (target_piece == nullptr && end.get_file() == start.get_file()) {
     if (colour == Colour::WHITE) {
-      return handle_not_capturing(start, end, board, 1, 2, 1);
+      // Set direction to be positive and starting rank to be 1
+      return handle_not_capturing(start, end, board, 1, 1);
     }
     else {
-      return handle_not_capturing(start, end, board, -1, -2, 6);
+      // Set direction to be negative and starting rank to be 6
+      return handle_not_capturing(start, end, board, -1, 6);
     }
   }
   // Capturing piece
   else if (target_piece != nullptr) {
     if (colour == Colour::WHITE) {
+      // Set direction to be positive
       return handle_capturing(start, end, board, 1);
     }
     else {
+      // Set direction to be negative
       return handle_capturing(start, end, board, -1);
     }
   }
@@ -39,14 +43,14 @@ bool Pawn::try_move(
 bool Pawn::handle_not_capturing(
   Position start, 
   Position end, 
-  ChessPiece* b[8][8], int one, int two, int starting_rank ) {
+  ChessPiece* b[8][8], int one, int starting_rank ) {
 
   // Pawn is moving forwards one square
   if (end.get_rank() == start.get_rank() + one) return true;
 
   // Pawn is on starting rank and moving fowards two squares
   if (start.get_rank() == starting_rank && 
-      end.get_rank() == start.get_rank() + two ) {
+      end.get_rank() == start.get_rank() + (one * 2) ) {
     
     // First sqaure in front of pawn is also empty
     if (b[start.get_file()+one][start.get_rank()+one] == nullptr) return true;

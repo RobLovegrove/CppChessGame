@@ -1,5 +1,7 @@
 #include <cmath>
 #include "King.h"
+#include "Rook.h"
+#include "Queen.h"
 #include "Position.h"
 #include "ChessGame.h"
 
@@ -24,10 +26,11 @@ bool King::try_move(
     }
   }
 
+  // If not castling King can only move at most 1 square in any direction
   if (abs(result.delta_file) > 1 || abs(result.delta_rank) > 1) return false;
 
   if (target_piece == nullptr || target_piece->get_colour() != this->colour) 
-  return true;
+    return true;
 
   return false;
 }
@@ -40,7 +43,8 @@ bool King::handle_castling(
   (delta_file < 0) ? distance_to_edge = 4 : distance_to_edge = 3;
 
   // Check the relevant corner contains a rook
-  if (b[4 + (distance_to_edge * increment)][rank]->get_type() != Type::ROOK) {
+  ChessPiece* rook = b[4 + (distance_to_edge * increment)][rank];
+  if (dynamic_cast<Rook*>(rook) && !dynamic_cast<Queen*>(rook)) {
     return false;
   }
 
@@ -49,6 +53,10 @@ bool King::handle_castling(
     if (b[4 + (i * increment)][rank] != nullptr) return false;
   }
 
+  /* 
+  Update ChessGame's attempting_castling attribute by setting flag 
+  corresponding to the colour and direction to 1
+  */
   if (castling != nullptr) {
     if (increment < 0) {
       (this->colour == Colour::WHITE) 
