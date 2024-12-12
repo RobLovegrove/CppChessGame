@@ -176,21 +176,28 @@ class ChessGame {
   bool is_castling_legal(Position start, Position end, const bool output);
 
   /*
-    Method: is_check of type const
-    Called either to look whether move has put opponent in:
-      check, checkmate or stalemate
-    Or called to ensure a given move does not leave active player in check at 
-    the end of their move
+    Method: is_check
+    Called to check whether current active_player is in check
+          
+    Returns:
+    bool: True if king in check
+          False if not
+  */
+  bool is_check();
+
+  /*
+    Method: is_square_attacked
+    Checks whether the non active_player can move to a given Position
+    (i.e. whether a given square is under attack)
 
     Params:
-      board: 8x8 2D array of ChessPiece pointers
-        Enables both the ChessGame's board or a copy of the board to be checked
+      target: Of type position, location of square to be checked
           
     Returns:
     bool: True if a given board has a king in check
           False if not
   */
-  bool is_check(ChessPiece* board[8][8]) const;
+  bool is_square_attacked(Position target);
 
   /*
     Method: can_move
@@ -279,8 +286,14 @@ class ChessGame {
   */
   void submitMove(const char* start_square, const char* end_square);
 
-
-
+  /*
+    Method: display_board
+    Displays a board in an 8x8 grid with the current position
+    Uppercase letters used to represent white pieces
+    Lower case letters used to represent black pieces
+    Letter N is used to represent Knights (K represents King)
+    Board displayed to terminal      
+  */
   void display_board();
 
   /*

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstring>
 #include <cassert>
-#include <bitset>
 
 #include <iomanip>
 
@@ -187,7 +186,7 @@ void ChessGame::loading_complete() {
   cout << "A new board state is loaded!" << endl;
 
   // Check whether the newly loaded game is already in checkmate/stalemate 
-  if (is_check(board)) {
+  if (is_check()) {
     cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in check";
     if (!can_move()) {
       cout << "mate";
@@ -201,7 +200,6 @@ void ChessGame::loading_complete() {
     game_state |= GAME_OVER;
   }
 }
-
 
 
 /* - - - - - - - - - SUBMIT MOVE FUNCTIONS - - - - - - - - - - - */
@@ -241,7 +239,7 @@ void ChessGame::submitMove(const char* start_square, const char* end_square) {
     else game_state |= BLACKS_TURN;
 
     // Check if new active player is in check/checkmate/stalemate
-    if (is_check(board)) {
+    if (is_check()) {
       cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in check";
       if (!can_move()) {
         cout << "mate";
@@ -294,22 +292,28 @@ bool ChessGame::is_legal_move(Position start, Position end, bool output) {
   }
 
   else {
+    
     // Not castling so check if move puts self in check
-    ChessPiece* tmp_board[8][8];
-    for (int file = 0; file < 8; file++) {
-      for (int rank = 0; rank < 8; rank++) {
-        tmp_board[file][rank] = board[file][rank];
-      }
-    }
-    // Make move on tmp_board
-    tmp_board[end.get_file()][end.get_rank()] = player;
-    tmp_board[start.get_file()][start.get_rank()] = nullptr;
+    ChessPiece* target = board[end.get_file()][end.get_rank()];
+
+    // Make move first - will undo this move after 
+    board[end.get_file()][end.get_rank()] = player;
+    board[start.get_file()][start.get_rank()] = nullptr;
 
     // Ensure move does not put self in check
-    if (is_check(tmp_board)) {
+    if (is_check()) {
+
+      // Undo move
+      board[end.get_file()][end.get_rank()] = target;
+      board[start.get_file()][start.get_rank()] = player;
+
       if (output) output_unsuccessful_move(start, end);
       return false;
     }
+
+    // Undo move
+    board[end.get_file()][end.get_rank()] = target;
+    board[start.get_file()][start.get_rank()] = player;
   }
   return true;
 
@@ -329,7 +333,8 @@ bool ChessGame::check_basic_rules(
 
   // No piece at starting location
   if (player == nullptr) {
-    if (output) cout << "There is no piece at position " << start << "!" << endl;
+    if (output)
+    cout << "There is no piece at position " << start << "!" << endl;
     return false;
   }
 
@@ -371,24 +376,17 @@ bool ChessGame::is_castling_legal(Position start, Position end, bool output) {
     increment = 1;
   }
 
-  // Make a tmp board
-  ChessPiece* tmp_board[8][8];
-  for (int x = 0; x < 8; x++) {
-    for (int y = 0; y < 8; y++) {
-      tmp_board[x][y] = board[x][y];
-    }
-  }
   // Check if king starts in check
-  if (is_check(tmp_board)) {
+  if (is_check()) {
     if (output) output_unsuccessful_move(start, end);
     attempting_castling = NILL;
     return false;
   }
   for (int i = 1; i < 3; i++) {
-    // Move king to next square and check if king now in check
-    tmp_board[4 + (i*increment)][rank] = tmp_board[4 + ((i-1)*increment)][rank];
-    tmp_board[4 + ((i-1)*increment)][rank] = nullptr;
-    if (is_check(tmp_board)) {
+    Position target(4 + (i*increment), rank);
+
+    // Check whether square king passes through/finishes on is attacked
+    if (is_square_attacked(target)) {
       if (output) output_unsuccessful_move(start, end);
       attempting_castling = NILL;
       return false;
@@ -397,19 +395,19 @@ bool ChessGame::is_castling_legal(Position start, Position end, bool output) {
   return true;
 }
 
-bool ChessGame::is_check(ChessPiece* b[8][8]) const {
-  
+bool ChessGame::is_check() {
+
   ChessPiece* king = nullptr;
   Position king_position(-1, -1); 
 
   // Find king's position
   for (int file = 0; file < 8; file++) {
     for (int rank = 0; rank < 8; rank++) {
-      if (b[file][rank] != nullptr) {
-        if (dynamic_cast<King*>(b[file][rank]) && 
-          *b[file][rank] == (game_state & BLACKS_TURN)) {
+      if (board[file][rank] != nullptr) {
+        if (dynamic_cast<King*>(board[file][rank]) && 
+          *board[file][rank] == (game_state & BLACKS_TURN)) {
           king_position = Position(file, rank);
-          king = b[file][rank];
+          king = board[file][rank];
           break;
         }
       }
@@ -421,12 +419,19 @@ bool ChessGame::is_check(ChessPiece* b[8][8]) const {
     return false;
   }
 
+  return is_square_attacked(king_position);
+}
+
+bool ChessGame::is_square_attacked(Position target) {
   for (int rank = 0; rank < 8; rank++) {
     for (int file = 0; file < 8; file++) {
-      if (b[file][rank] != nullptr && *b[file][rank] != (game_state & BLACKS_TURN)) {
-        //if (check_basic_rules(Position(file, rank), king_position, false)) {
-          if (b[file][rank]->try_move(Position(file, rank), king_position, b)) return true;
-        //}
+      if (board[file][rank] != nullptr && 
+      *board[file][rank] != (game_state & BLACKS_TURN)) {
+
+        if (check_basic_rules(Position(file, rank), target, false)) {
+          if (board[file][rank]->try_move(Position(file, rank), target, board))
+            return true;
+        }
       }
     }
   }
@@ -440,9 +445,12 @@ bool ChessGame::can_move() {
     for (int rank = 0; rank < 8; rank++) {
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-          // ChessPiece == operator overloaded to compare piece colour with active_player flag
-          if (board[file][rank] != nullptr && *board[file][rank] == (game_state & BLACKS_TURN)) {
-            if (is_legal_move(Position(file, rank), Position(i, j), false)) return true;
+          // ChessPiece == operator overloaded 
+          // Compares piece colour with active_player flag
+          if (board[file][rank] != nullptr && 
+            *board[file][rank] == (game_state & BLACKS_TURN)) {
+            if (is_legal_move(Position(file, rank), Position(i, j), false)) 
+              return true;
           }
         }
       }
@@ -566,7 +574,7 @@ void ChessGame::display_board() {
 
     for (int rank = 7; rank >= 0; rank--) { 
         cout << horizontal_border << endl;
-        cout << rank << " |";
+        cout << rank+1 << " |";
         for (int file = 0; file < 8; file++) { 
             ChessPiece* piece = board[file][rank];
 
