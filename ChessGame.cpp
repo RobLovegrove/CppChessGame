@@ -569,29 +569,32 @@ void ChessGame::output_unsuccessful_move(Position start, Position end) const {
 }
 
 void ChessGame::display_board() {
-    const char* horizontal_border = "  +---+---+---+---+---+---+---+---+"; 
+  const char* horizontal_border = "  +---+---+---+---+---+---+---+---+"; 
+  
+  for (int rank = 7; rank >= 0; rank--) { 
+    cout << horizontal_border << endl;
+    cout << rank+1 << " |";
+    for (int file = 0; file < 8; file++) { 
+      ChessPiece* piece = board[file][rank];
+      
+      if (piece == nullptr) {
+	cout << "   |"; 
+      }
+      else {
+	const char* name = piece->get_type();
+	char ch = (name[0] == 'K' && name[1] == 'n') ? 'N' : name[0];
+	Colour colour = piece->get_colour();
+	char p = (colour == Colour::WHITE
+		  ? static_cast<char>(toupper(ch)) : static_cast<char>(tolower(ch)));    
+	cout << " " << p << " |"; 
+       
 
-    for (int rank = 7; rank >= 0; rank--) { 
-        cout << horizontal_border << endl;
-        cout << rank+1 << " |";
-        for (int file = 0; file < 8; file++) { 
-            ChessPiece* piece = board[file][rank];
-
-            if (piece == nullptr) {
-                cout << "   |"; 
-            } else {
-                const char* name = piece->get_type();
-                char ch = (name[0] == 'K' && name[1] == 'n') ? 'N' : name[0];
-
-                cout << " " << (piece->get_colour() == Colour::WHITE 
-                ? static_cast<char>(toupper(ch)) 
-                : static_cast<char>(tolower(ch))) << " |";
-            }
-        }
-
-        cout << endl;
+      }
     }
-
-    cout << horizontal_border << endl; 
-    cout << "    A   B   C   D   E   F   G   H " << endl << endl;
+    
+    cout << endl;
+    }
+  
+  cout << horizontal_border << endl; 
+  cout << "    A   B   C   D   E   F   G   H " << endl << endl;
 }
