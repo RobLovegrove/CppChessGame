@@ -587,13 +587,11 @@ void ChessGame::display_board() {
 	char p = (colour == Colour::WHITE
 		  ? static_cast<char>(toupper(ch)) : static_cast<char>(tolower(ch)));    
 	cout << " " << p << " |"; 
-       
-
       }
     }
     
     cout << endl;
-    }
+  }
   
   cout << horizontal_border << endl; 
   cout << "    A   B   C   D   E   F   G   H " << endl << endl;
