@@ -185,9 +185,9 @@ void ChessGame::loading_complete() {
 
   // Check whether the newly loaded game is already in checkmate/stalemate 
   if (is_check(board)) {
+    cout << static_cast<Colour>(game_state & BLACKS_TURN) << " is in check";
     if (!can_move()) {
-      cout << static_cast<Colour>(game_state & BLACKS_TURN);
-      cout << " is in checkmate";
+      cout << "mate";
       game_state |= GAME_OVER;
     }
     cout << endl;

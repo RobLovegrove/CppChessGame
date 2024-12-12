@@ -44,7 +44,7 @@ bool King::handle_castling(
 
   // Check the relevant corner contains a rook
   ChessPiece* rook = b[4 + (distance_to_edge * increment)][rank];
-  if (dynamic_cast<Rook*>(rook) && !dynamic_cast<Queen*>(rook)) {
+  if (!(dynamic_cast<Rook*>(rook) && !dynamic_cast<Queen*>(rook))) {
     return false;
   }
 
@@ -67,6 +67,5 @@ bool King::handle_castling(
       ? *castling = WHITE_KINGSIDE : *castling = BLACK_KINGSIDE;
     }
   }
-  
   return true;
 }

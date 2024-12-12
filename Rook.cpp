@@ -29,7 +29,7 @@ bool Rook::try_move(
 
 bool Rook::try_rook_moves(
   Position start, Position end, ChessPiece* board[8][8]) {
-  
+    
   if (start.get_rank() == end.get_rank()) {
     if (start.get_file() < end.get_file()) {
       return handle_file_move(start, end, board, 1);
@@ -73,9 +73,11 @@ bool Rook::handle_rank_move(
   int file = start.get_file();
 
   for (int i = 1; i <= distance; i++) {
-    if (i == distance &&
-        (target_piece == nullptr || target_piece->get_colour() != this->colour)) 
+    if (i == distance) {
+      if (target_piece == nullptr || target_piece->get_colour() != this->colour) {
         return true;
+      }
+    }
     if (board[file][start.get_rank() + (direction * i)] != NULL) {
       return false;
     } 

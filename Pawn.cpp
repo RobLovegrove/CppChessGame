@@ -47,14 +47,13 @@ bool Pawn::handle_not_capturing(
 
   // Pawn is moving forwards one square
   if (end.get_rank() == start.get_rank() + one) return true;
-
+  
   // Pawn is on starting rank and moving fowards two squares
   if (start.get_rank() == starting_rank && 
       end.get_rank() == start.get_rank() + (one * 2) ) {
-    
+  
     // First sqaure in front of pawn is also empty
-    if (b[start.get_file()+one][start.get_rank()+one] == nullptr) return true;
-
+    if (b[start.get_file()][start.get_rank()+one] == nullptr) return true;
   }
   return false;
 
