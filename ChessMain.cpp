@@ -10,7 +10,7 @@ int main() {
 	cout << "Testing the Chess Engine\n";
 	cout << "========================\n\n";
 	ChessGame cg;
-/*
+
 	// Testing Pawn
 	cout << "Testing Pawn" << std::endl;
 	cg.loadState("2K5/pppppppp/8/8/P1k5/1nb5/P7/8 w KQkq");
@@ -103,7 +103,7 @@ int main() {
 
 	cg.submitMove("E6", "F6");
 	cout << '\n';
-*/
+
 	// CASTLING EXAMPLE
 	// Kingside with rook
 	cout << "Testing Castling" << std::endl;
