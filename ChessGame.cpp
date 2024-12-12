@@ -31,7 +31,10 @@ ChessGame::ChessGame() {
 ChessGame::~ChessGame() {
   for (int file = 0; file < 8; file++){
     for (int rank = 0; rank < 8; rank++) {
-      deallocate_memory(file, rank);
+      
+      // Deallocate memory
+      delete board[file][rank];
+      board[file][rank] = nullptr;
     }
   }
 }
@@ -86,13 +89,6 @@ void ChessGame::loadState(const char* FEN_string) {
 
 /* - - - - - - - - - LOAD STATE HELPER FUNCTIONS - - - - - - - - - - - */
 
-void ChessGame::deallocate_memory(const int file, const int rank) {
-  if (board[file][rank] != nullptr) {
-    delete board[file][rank];
-    board[file][rank] = nullptr;
-  }
-}
-
 void ChessGame::load_position(const char c, int& file, int& rank) {
 
   if (c == '/') {
@@ -103,7 +99,8 @@ void ChessGame::load_position(const char c, int& file, int& rank) {
   if (c > '0' && c < '9') {
     int num_blank_squares = c - '0';
     for (int j = 0; j < num_blank_squares; j++) {
-      deallocate_memory(file, rank);
+      // Deallocate memory
+      delete board[file][rank];
       board[file][rank] = nullptr;
       file++;
     }
@@ -125,7 +122,9 @@ void ChessGame::load_position(const char c, int& file, int& rank) {
 void ChessGame::assign_piece(
   const char c, int &file, const int rank, const Colour &colour) {
 
-  deallocate_memory(file, rank);
+  // Deallocate memory
+  delete board[file][rank];
+  board[file][rank] = nullptr;
 
   switch (c) {
   case 'P':

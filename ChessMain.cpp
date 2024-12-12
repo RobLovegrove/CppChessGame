@@ -142,7 +142,6 @@ int main() {
 	//cg.display_board();
 
 	// CHECKMATE EXAMPLE
-
 	cout << "\nTesting checkmate" << std::endl;
 	cg.loadState("8/8/8/5K1k/8/8/8/6R1 w KQkq");
 	cout << '\n';

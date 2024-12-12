@@ -57,15 +57,6 @@ class ChessGame {
   uint8_t attempting_castling = NILL;
 
   /* LOAD GAME HELPER FUNCTIONS */
-  
-  /*
-    Method: deallocate_memory
-
-    Calls delete on ChessPiece* located at given file/rank not equal to nullptr
-    Therefore deallocating memory on the heap
-    Sets ChessPiece* to nullptr after memory is deallocated
-  */
-  void deallocate_memory(const int file, const int rank);
 
   /*
     Method: load_position
