@@ -11,6 +11,8 @@ int main() {
 	cout << "========================\n\n";
 	ChessGame cg;
 
+	cg.submitMove("A2", "A4");
+	
 	// Testing Pawn
 	cout << "Testing Pawn" << std::endl;
 	cg.loadState("2K5/pppppppp/8/8/P1k5/1nb5/P7/8 w KQkq");

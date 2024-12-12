@@ -78,6 +78,7 @@ void ChessGame::loadState(const char* FEN_string) {
       else if (FEN_string[i] == 'q') game_state |= BLACK_QUEENSIDE;
     }
   }
+  
   loading_complete();
 }
 
@@ -204,6 +205,12 @@ void ChessGame::loading_complete() {
 /* - - - - - - - - - SUBMIT MOVE FUNCTIONS - - - - - - - - - - - */
 
 void ChessGame::submitMove(const char* start_square, const char* end_square) {
+
+  // Ensure a game has been loaded
+  if (!(game_state & LOADING_CASTLING_RIGHTS)) {
+    cout << "No game has been loaded in!" << endl;
+    return;
+  }
   
   // Check move string format is correct and within board limits
   if (!is_valid_square(start_square) || !is_valid_square(end_square)) {
