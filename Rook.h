@@ -4,33 +4,11 @@
 #include "ChessPiece.h"
 #include "Colour.h"
 
-class Rook: virtual public ChessPiece {
+class Rook: public ChessPiece {
 
- private:
-   /*
-    Method: handle_file_move
-    Checks if path between start file and end file is clear 
-    Ensures end square does not contain own piece
+  /* - - - - - - - PRIVATE METHODS - - - - - - - -- - */
 
-    Returns:
-      bool: True if Rook can path to end square
-            False if not
-  */
-  bool handle_file_move(
-    Position current, Position target, ChessPiece* b[8][8], int direction);
-
-   /*
-    Method: handle_rank_move
-    Checks if path between start rank and end rank is clear 
-    Ensures end square does not contain own piece
-
-    Returns:
-      bool: True if Rook can path to end square
-            False if not
-  */
-  bool handle_rank_move(
-    Position current, Position target, ChessPiece* b[8][8], int direction);
-    
+ private:    
     /*
     Method: handle_rook_castling
     Called if Rook attempting to castle by moving onto own King
@@ -57,20 +35,8 @@ class Rook: virtual public ChessPiece {
     int delta_file, int delta_rank, Position start, ChessPiece* b[8][8],
     int rank, uint8_t* castling);
 
-protected:
 
-  /*
-    Method: try_rook_moves
-    Checks if start file equals end file or start rank equals end rank
-    If not returns false
-    Otherwise calls handle_rank_move or handle_file_move
-
-    Returns:
-      bool: True if Rook can path to end square
-            False if not
-  */
-  bool try_rook_moves(Position current, Position target, ChessPiece* b[8][8]);
-  Rook() {}
+  /* - - - - - - - PUBLIC METHODS - - - - - - - -- - */
 
  public:
   /*

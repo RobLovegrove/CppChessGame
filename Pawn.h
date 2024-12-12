@@ -7,6 +7,8 @@
 
 class Pawn: public ChessPiece {
 
+  /* - - - - - - - PRIVATE METHODS - - - - - - - -- - */
+
  private:
  /*
   Method: handle_not_capturing
@@ -44,6 +46,9 @@ class Pawn: public ChessPiece {
  */
   bool handle_capturing(
     Position start, Position end, ChessPiece* b[8][8], int one);
+
+
+  /* - - - - - - - PUBLIC METHODS - - - - - - - -- - */
 
  public:
    /*

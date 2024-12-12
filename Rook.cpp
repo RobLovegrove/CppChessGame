@@ -27,64 +27,6 @@ bool Rook::try_move(
   return try_rook_moves(start, end, b);
 }
 
-bool Rook::try_rook_moves(
-  Position start, Position end, ChessPiece* board[8][8]) {
-    
-  if (start.get_rank() == end.get_rank()) {
-    if (start.get_file() < end.get_file()) {
-      return handle_file_move(start, end, board, 1);
-    }
-    return handle_file_move(start, end, board, -1);
-  }
-
-  if (start.get_file() == end.get_file()) {
-    if (start.get_rank() < end.get_rank()) {
-      return handle_rank_move(start, end, board, 1);
-    }
-    return handle_rank_move(start, end, board, -1);
-  }
-  return false;
-}
-
-bool Rook::handle_file_move(
-  Position start, Position end, ChessPiece* board[8][8], int direction) {
-
-  ChessPiece* target_piece = board[end.get_file()][end.get_rank()];
-  int distance = abs(end.get_file() - start.get_file());
-  int rank = start.get_rank();
-
-  for (int i = 1; i <= distance; i++) {
-    if (i == distance && 
-        (target_piece == nullptr || target_piece->get_colour() != this->colour)) 
-        return true;
-    if (board[start.get_file() + (direction * i)][rank] != NULL) {
-      return false;
-    } 
-  }
-  return false;
-}
-
-bool Rook::handle_rank_move(
-  Position start, Position end, ChessPiece* board[8][8], int direction) {  
-
-  ChessPiece* target_piece = board[end.get_file()][end.get_rank()];
-
-  int distance = abs(end.get_rank() - start.get_rank());
-  int file = start.get_file();
-
-  for (int i = 1; i <= distance; i++) {
-    if (i == distance) {
-      if (target_piece == nullptr || target_piece->get_colour() != this->colour) {
-        return true;
-      }
-    }
-    if (board[file][start.get_rank() + (direction * i)] != NULL) {
-      return false;
-    } 
-  }
-  return false;
-}
-
 bool Rook::handle_rook_castling(
   int delta_file, int delta_rank, Position start, 
   ChessPiece* b[8][8], int rank, uint8_t* castling) {

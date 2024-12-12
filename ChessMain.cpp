@@ -14,28 +14,42 @@ int main() {
 	cg.submitMove("A2", "A4");
 	
 	// Testing Pawn
-	cout << "Testing Pawn" << std::endl;
+	cout << "\nTesting Pawn" << std::endl;
 	cg.loadState("2K5/pppppppp/8/8/P1k5/1nb5/P7/8 w KQkq");
 
-	//cg.submitMove("C4", "D5");
+	//cg.display_board();
 	cg.submitMove("A2", "C3");
+	//cg.display_board();
 	cg.submitMove("A4", "A3");
+	//cg.display_board();
 	cg.submitMove("A2", "B2");
+	//cg.display_board();
 	cg.submitMove("A2", "B3");
+	//cg.display_board();
 	cg.submitMove("A7", "A5");
+	//cg.display_board();
 	cg.submitMove("C4", "D5");
+	//cg.display_board();
 	cg.submitMove("A4", "A5");
+	//cg.display_board();
 	cg.submitMove("A7", "A5");
+	//cg.display_board();
 	cg.submitMove("H7", "H5");
 
 	// Testing Rook
 	cout << "\nTesting Rook" << std::endl;
 	cg.loadState("7r/R7/r7/8/1K1k4/8/8/R7 w KQkq");
+	//cg.display_board();
 	cg.submitMove("A1", "B3");
+	//cg.display_board();
 	cg.submitMove("A1", "A3");
+	//cg.display_board();
 	cg.submitMove("H8", "A8");
+	//cg.display_board();
 	cg.submitMove("A3", "A8");
+	//cg.display_board();
 	cg.submitMove("A3", "A7");
+	//cg.display_board();
 	cg.submitMove("A3", "A6");
 
 	// Testing Knight
@@ -70,7 +84,7 @@ int main() {
 	cg.submitMove("B5", "D7");
 
 	// Testing Queen
-	cout << "Testing Queen" << std::endl;
+	cout << "\nTesting Queen" << std::endl;
 	cg.loadState("rnbqkbnr/ppp2ppp/8/8/8/8/PPP2PPP/RNBQKBNR w KQkq");
 	cg.submitMove("D1", "C2");
 	cg.submitMove("D1", "D4");
@@ -81,7 +95,7 @@ int main() {
 	cg.submitMove("F6", "E6");
 
 	// Testing King
-	cout << "Testing King" << std::endl;
+	cout << "\nTesting King" << std::endl;
 	cg.loadState("rnbqkbnr/ppp3pp/8/8/8/8/PPP2PPP/RNBQKBNR w KQkq");
 	cg.submitMove("E1", "C2");
 	cg.submitMove("E1", "E2");
@@ -90,7 +104,7 @@ int main() {
 
 	// CHECKMATE EXAMPLE
 
-	cout << "Testing checkmate" << std::endl;
+	cout << "\nTesting checkmate" << std::endl;
 	cg.loadState("8/8/8/5K1k/8/8/8/6R1 w KQkq");
 	cout << '\n';
 
@@ -99,7 +113,7 @@ int main() {
 	cout << '\n';
 
 	// STALEMATE EXAMPLE
-	cout << "Testing stalemate" << std::endl;
+	cout << "\nTesting stalemate" << std::endl;
 	cg.loadState("5k2/5P2/4K3/8/8/8/8/8 w KQkq");
 	cout << '\n';
 
@@ -108,7 +122,7 @@ int main() {
 
 	// CASTLING EXAMPLE
 	// Kingside with rook
-	cout << "Testing Castling" << std::endl;
+	cout << "\nTesting Castling" << std::endl;
 	cg.loadState("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq");
 	cout << '\n';
 
@@ -190,46 +204,57 @@ int main() {
 	cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("E2", "E4");
 	cg.submitMove("E7", "E6");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("D2", "D4");
 	cg.submitMove("D7", "D5");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("B1", "C3");
 	cg.submitMove("F8", "B4");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("F1", "D3");
 	cg.submitMove("B4", "C3");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("B2", "C3");
 	cg.submitMove("H7", "H6");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("C1", "A3");
 	cg.submitMove("B8", "D7");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("D1", "E2");
 	cg.submitMove("D5", "E4");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("D3", "E4");
 	cg.submitMove("G8", "F6");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("E4", "D3");
 	cg.submitMove("B7", "B6");
 	cout << '\n';
 
+	//cg.display_board();
 	cg.submitMove("E2", "E6");
 	cg.submitMove("F7", "E6");
 	cout << '\n';
-
+	
+	//cg.display_board();
 	cg.submitMove("D3", "G6");
 	cout << '\n';
 

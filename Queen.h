@@ -6,10 +6,8 @@
 #include "Bishop.h"
 #include "Colour.h"
 
-class Queen: public Rook, public Bishop {
-
- private:
-
+class Queen: public ChessPiece {
+  
  public:
     /*
     Queen Constructor with one paramter

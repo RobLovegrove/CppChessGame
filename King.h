@@ -6,6 +6,8 @@
 
 class King: public ChessPiece {
 
+  /* - - - - - - - PRIAVTE METHODS - - - - - - - -- - */
+
  private:
   /*
     Method: handle_castling
@@ -31,6 +33,9 @@ class King: public ChessPiece {
   */
   bool handle_castling(
     int delta_file, ChessPiece* b[8][8], int rank, uint8_t* castling);
+
+
+/* - - - - - - - PUBLIC METHODS - - - - - - - -- - */
 
  public:
    /*

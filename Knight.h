@@ -6,8 +6,6 @@
 
 class Knight: public ChessPiece {
 
- private:
-
  public:
   /*
     Knight Constructor with one paramter

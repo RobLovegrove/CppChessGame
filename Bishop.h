@@ -4,31 +4,7 @@
 #include "ChessPiece.h"
 #include "Colour.h"
 
-class Bishop: virtual public ChessPiece {
-
-/* - - - - - - - PRIVATE METHODS - - - - - - - -- - */
- protected:
-  /*
-    Method: try_bishop_moves
-    Tests whether a bishop can path from a given start to a given end
-
-    Params: 
-      start: Of type Position
-            File and rank of starting square
-      end: Of type Position
-          File and rank of final square
-      board: 2D array (8x8) containing pointers to chess pieces
-            Empty sqaures contain nullptr
-    
-    Returns:
-      bool: True if bishop can path from start to end
-            False if bishop cannot path from start to end
-  */
-  bool try_bishop_moves(
-    Position start, Position end, ChessPiece* board[8][8]);
-  Bishop() {}
-
-/* - - - - - - - PUBLIC METHODS - - - - - - - -- - */
+class Bishop: public ChessPiece {
 
  public:
    /*

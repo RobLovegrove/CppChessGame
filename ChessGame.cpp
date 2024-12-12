@@ -3,6 +3,8 @@
 #include <cassert>
 #include <bitset>
 
+#include <iomanip>
+
 #include "ChessGame.h"
 #include "Colour.h"
 #include "Position.h"
@@ -341,8 +343,7 @@ bool ChessGame::check_basic_rules(
   if (opponent != nullptr && player->get_colour() == opponent->get_colour()) {
     // Castling allowed by moving rook onto king or king onto rook
     // Therefore ignore rooks and kings
-    if (!(dynamic_cast<Rook*>(player) && !dynamic_cast<Queen*>(player)) && 
-    !dynamic_cast<King*>(player)) {
+    if (!dynamic_cast<Rook*>(player) && !dynamic_cast<King*>(player)) {
 
       if (output) output_unsuccessful_move(start, end);
       return false;
@@ -397,6 +398,7 @@ bool ChessGame::is_castling_legal(Position start, Position end, bool output) {
 }
 
 bool ChessGame::is_check(ChessPiece* b[8][8]) const {
+  
   ChessPiece* king = nullptr;
   Position king_position(-1, -1); 
 
@@ -463,7 +465,7 @@ void ChessGame::update_castling_rights(Position start, Position end) {
   }
 
   // Update castling state on rook move
-  if (dynamic_cast<Rook*>(player) && !dynamic_cast<Queen*>(player)) {
+  if (dynamic_cast<Rook*>(player)) {
     if (opponent != nullptr) {
       if (*opponent == (game_state & BLACKS_TURN) && 
           dynamic_cast<King*>(opponent)) {
@@ -557,4 +559,32 @@ void ChessGame::output_unsuccessful_move(Position start, Position end) const {
 
   ChessPiece* player = board[start.get_file()][start.get_rank()];
   cout << *player << " cannot move to " << end << "!" << endl;
+}
+
+void ChessGame::display_board() {
+    const char* horizontal_border = "  +---+---+---+---+---+---+---+---+"; 
+
+    for (int rank = 7; rank >= 0; rank--) { 
+        cout << horizontal_border << endl;
+        cout << rank << " |";
+        for (int file = 0; file < 8; file++) { 
+            ChessPiece* piece = board[file][rank];
+
+            if (piece == nullptr) {
+                cout << "   |"; 
+            } else {
+                const char* name = piece->get_type();
+                char ch = (name[0] == 'K' && name[1] == 'n') ? 'N' : name[0];
+
+                cout << " " << (piece->get_colour() == Colour::WHITE 
+                ? static_cast<char>(toupper(ch)) 
+                : static_cast<char>(tolower(ch))) << " |";
+            }
+        }
+
+        cout << endl;
+    }
+
+    cout << horizontal_border << endl; 
+    cout << "    A   B   C   D   E   F   G   H " << endl << endl;
 }

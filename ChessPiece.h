@@ -7,6 +7,38 @@
 
 class ChessPiece {
 
+/* - - - - - - - PRIVATE METHODS - - - - - - - -- - */
+
+private:
+   /*
+    Method: handle_rook_file_move
+    Called by try_rook_moves
+    Checks if path between start file and end file is clear 
+    Ensures end square does not contain own piece
+
+    Returns:
+      bool: True if piece can path to end square via file
+            False if not
+  */
+  bool handle_rook_file_move(
+    Position current, Position target, ChessPiece* b[8][8], int direction);
+
+   /*
+    Method: handle_rook_rank_move
+    Called by try_rook_moves
+    Checks if path between start rank and end rank is clear 
+    Ensures end square does not contain own piece
+
+    Returns:
+      bool: True if piece can path to end square via rank
+            False if not
+  */
+  bool handle_rook_rank_move(
+    Position current, Position target, ChessPiece* b[8][8], int direction);
+
+
+/* - - - - - - - PROTECTED METHODS - - - - - - - -- - */
+
 protected:
   Colour colour;
 
@@ -20,12 +52,39 @@ protected:
   ChessPiece(Colour colour) : colour(colour) {};
 
   /*
-    ChessPiece default constructor
-    Enables virtual child classes Bishop and Rook to be constructed via
-    default constructor when grandchild class Queen is constructed using 
-    ChessPiece's colour constructor
+    Method: try_bishop_moves
+    Tests whether a piece can path from a given start to a given end like
+    a bishop (on the diagonals)
+
+    Params: 
+      start: Of type Position
+            File and rank of starting square
+      end: Of type Position
+          File and rank of final square
+      board: 2D array (8x8) containing pointers to chess pieces
+            Empty sqaures contain nullptr
+    
+    Returns:
+      bool: True if bishop can path from start to end
+            False if bishop cannot path from start to end
   */
-  ChessPiece() {}
+  bool try_bishop_moves(
+  Position start, Position end, ChessPiece* board[8][8]);
+
+  /*
+    Method: try_rook_moves
+    Checks if start file equals end file or start rank equals end rank
+    If not returns false
+    Otherwise calls handle_rank_move or handle_file_move
+
+    Returns:
+      bool: True if Rook can path to end square
+            False if not
+  */
+  bool try_rook_moves(Position current, Position target, ChessPiece* b[8][8]);
+
+
+/* - - - - - - - - PUBLIC METHODS - - - - - - - -- - */
 
 public:
   /*
@@ -117,6 +176,7 @@ public:
     Ensures proper destruction of child classes
   */
   virtual ~ChessPiece() {};
+
 };
 
 #endif

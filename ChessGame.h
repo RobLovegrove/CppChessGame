@@ -279,6 +279,10 @@ class ChessGame {
   */
   void submitMove(const char* start_square, const char* end_square);
 
+
+
+  void display_board();
+
   /*
     ChessGame Constructor
     Sets all ChessPiece pointers in the board[8][8] to be nullptrs
@@ -291,7 +295,6 @@ class ChessGame {
     Loops through ChessGame board[8][8] calling delete on any ChessPiece pointer
     not current set to nullptr via deallocate memory helper function
   */
-
   ~ChessGame();
 };
 
