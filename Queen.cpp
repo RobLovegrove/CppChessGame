@@ -1,6 +1,4 @@
 #include "Queen.h"
-#include "Rook.h"
-#include "Bishop.h"
 #include "ChessGame.h"
 
 using namespace std;

@@ -11,6 +11,23 @@ int main() {
 	cout << "========================\n\n";
 	ChessGame cg;
 
+	//cg.loadState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq");
+	cg.loadState("r2rk3/8/8/8/8/8/8/R3K2R w KQkq");
+	cout << '\n';
+	cg.display_board();
+	cg.submitMove("A1", "A8");
+	cg.submitMove("D8", "B8");	
+	cg.submitMove("A8", "A1");	
+	cg.submitMove("B8", "A8");
+	cg.submitMove("E1", "G1");
+	cg.display_board();
+	cg.submitMove("A8", "E8");
+	cg.display_board();
+	cg.submitMove("E8", "A8");
+	cg.display_board();
+
+
+/*
 	cg.submitMove("A2", "A4");
 	
 	// Testing Pawn
@@ -318,6 +335,6 @@ int main() {
 	cout << '\n';
 
 	//cg.display_board();
-
+*/
 	return 0;
 }

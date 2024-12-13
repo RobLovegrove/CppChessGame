@@ -2,8 +2,6 @@
 #define QUEEN_H
 
 #include "ChessPiece.h"
-#include "Rook.h"
-#include "Bishop.h"
 #include "Colour.h"
 
 class Queen: public ChessPiece {

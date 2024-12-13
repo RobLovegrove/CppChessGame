@@ -2,8 +2,6 @@
 #include <cstring>
 #include <cassert>
 
-#include <iomanip>
-
 #include "ChessGame.h"
 #include "Colour.h"
 #include "Position.h"
@@ -273,8 +271,7 @@ bool ChessGame::is_legal_move(Position start, Position end, bool output) {
 
   // Ensure piece is active player
   if (*player != (game_state & BLACKS_TURN)) {
-    cout << "It is not " << player->get_colour();
-    cout << "'s turn to move!" << endl;
+    cout << "It is not " << player->get_colour() << "'s turn to move!" << endl;
     return false;
   }
   
@@ -499,6 +496,22 @@ void ChessGame::update_castling_rights(Position start, Position end) {
       }
     }
   }
+
+  if (dynamic_cast<Rook*>(opponent)) {
+    // Capturing opponent rook, if rook in corner remove castling right
+    int rank;
+    (game_state & BLACKS_TURN) ? rank = 0 : rank = 7;
+    if (Position(0, rank) == end) {
+      // Remove queenside castling rights of non active player
+      if (game_state & BLACKS_TURN) game_state &= ~WHITE_QUEENSIDE;
+      else game_state &= ~BLACK_QUEENSIDE;
+    }
+    else if (Position(7, rank) == end) {
+      // Remove kingside castling rights of non active player
+      if (game_state & BLACKS_TURN) game_state &= ~WHITE_KINGSIDE;
+      else game_state &= ~BLACK_QUEENSIDE;
+    }
+  }
 }
 
 void ChessGame::castle() {
@@ -541,6 +554,10 @@ void ChessGame::make_move(Position start, Position end) {
 
   // Remove captured piece from board
   if (opponent != nullptr) {
+
+
+
+
     delete opponent;
     opponent = nullptr;
   }
@@ -578,18 +595,17 @@ void ChessGame::display_board() {
       ChessPiece* piece = board[file][rank];
       
       if (piece == nullptr) {
-	cout << "   |"; 
+	      cout << "   |"; 
       }
       else {
-	const char* name = piece->get_type();
-	char ch = (name[0] == 'K' && name[1] == 'n') ? 'N' : name[0];
-	Colour colour = piece->get_colour();
-	char p = (colour == Colour::WHITE
-		  ? static_cast<char>(toupper(ch)) : static_cast<char>(tolower(ch)));    
-	cout << " " << p << " |"; 
+	      const char* name = piece->get_type();
+	      char ch = (name[0] == 'K' && name[1] == 'n') ? 'N' : name[0];
+	      Colour colour = piece->get_colour();
+	      char p = (colour == Colour::WHITE
+		      ? static_cast<char>(toupper(ch)) : static_cast<char>(tolower(ch)));    
+	      cout << " " << p << " |"; 
       }
     }
-    
     cout << endl;
   }
   
