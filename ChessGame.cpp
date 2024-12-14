@@ -17,23 +17,72 @@ using namespace std;
 
 /* - - - - - - - - - CONSTRUCTOR - - - - - - - - - - - */
 ChessGame::ChessGame() {
+  // Clear the board
   for (int file = 0; file < 8; file++){
     for (int rank = 0; rank < 8; rank++) {
-      board[file][rank] = nullptr; 
+      board[file][rank] = nullptr;
     }
   }
+
+  reset_pieces(white_pieces);
+  reset_pieces(black_pieces);
   game_state = NILL;
 }
 
 /* - - - - - - - - - DESCTRUCTOR - - - - - - - - - - - */
 ChessGame::~ChessGame() {
-  for (int file = 0; file < 8; file++){
-    for (int rank = 0; rank < 8; rank++) {
-      
-      // Deallocate memory
-      delete board[file][rank];
-      board[file][rank] = nullptr;
-    }
+  delete_pieces(white_pieces);
+  delete_pieces(black_pieces);
+}
+
+void ChessGame::reset_pieces(Pieces pieces) {
+  if (pieces.pawn != nullptr) pieces.pawn->piece_counter = 0;
+  if (pieces.rook != nullptr) pieces.rook->piece_counter = 0;
+  if (pieces.knight != nullptr) pieces.knight->piece_counter = 0;
+  if (pieces.bishop != nullptr) pieces.bishop->piece_counter = 0;
+  if (pieces.queen != nullptr) pieces.queen->piece_counter = 0;
+  if (pieces.king != nullptr) pieces.king->piece_counter = 0;
+}
+
+void ChessGame::delete_pieces(Pieces pieces) {
+  delete pieces.pawn;
+  delete pieces.rook;
+  delete pieces.knight;
+  delete pieces.bishop;
+  delete pieces.queen;
+  delete pieces.king;
+}
+
+void ChessGame::delete_piece(Pieces pieces, ChessPiece* chess_piece) {
+  if (dynamic_cast<Pawn*>(chess_piece)) {
+    delete pieces.pawn;
+    pieces.pawn = nullptr;
+    return;
+  }
+  if (dynamic_cast<Rook*>(chess_piece)) {
+    delete pieces.rook;
+    pieces.rook = nullptr;
+    return;
+  }
+  if (dynamic_cast<Knight*>(chess_piece)) {
+    delete pieces.knight;
+    pieces.knight = nullptr;
+    return;
+  }
+  if (dynamic_cast<Bishop*>(chess_piece)) {
+    delete pieces.bishop;
+    pieces.bishop = nullptr;
+    return;
+  }
+  if (dynamic_cast<Queen*>(chess_piece)) {
+    delete pieces.queen;
+    pieces.queen = nullptr;
+    return;
+  }
+  if (dynamic_cast<King*>(chess_piece)) {
+    delete pieces.king;
+    pieces.king = nullptr;
+    return;
   }
 }
 
@@ -41,6 +90,8 @@ ChessGame::~ChessGame() {
 
 void ChessGame::loadState(const char* FEN_string) {
 
+  reset_pieces(white_pieces);
+  reset_pieces(black_pieces);
   game_state = NILL;
   
   int rank = 7;
@@ -98,19 +149,18 @@ void ChessGame::load_position(const char c, int& file, int& rank) {
     int num_blank_squares = c - '0';
     for (int j = 0; j < num_blank_squares; j++) {
       // Deallocate memory
-      delete board[file][rank];
       board[file][rank] = nullptr;
       file++;
     }
   }
   
   if (c >= 'B' && c <= 'R') {
-    assign_piece(c, file, rank, Colour::WHITE);
+    assign_piece(c, file, rank, Colour::WHITE, white_pieces);
   }
   
   if (c >= 'b' && c <= 'r') {
     char uppercase = toupper(c);
-    assign_piece(uppercase, file, rank, Colour::BLACK);
+    assign_piece(uppercase, file, rank, Colour::BLACK, black_pieces);
   }
   
   if (rank == 0 && file == 8) game_state |= LOADING_ACTIVE_PLAYER;
@@ -118,58 +168,68 @@ void ChessGame::load_position(const char c, int& file, int& rank) {
 }
 
 void ChessGame::assign_piece(
-  const char c, int &file, const int rank, const Colour &colour) {
+  const char c, int &file, const int rank, const Colour &colour, Pieces &pieces) {
 
-  // Deallocate memory
-  delete board[file][rank];
   board[file][rank] = nullptr;
 
   switch (c) {
   case 'P':
     {
-      Pawn* pawn = new Pawn(colour);
-      assert(pawn);
-      board[file][rank] = pawn;
+      if (pieces.pawn == nullptr) {
+        pieces.pawn = new Pawn(colour);
+      }
+      pieces.pawn->piece_counter++;
+      board[file][rank] = pieces.pawn;
       file++;
       break;
     }
   case 'R':
     {
-      Rook* rook = new Rook(colour);
-      assert(rook);
-      board[file][rank] = rook;
+      if (pieces.rook == nullptr) {
+        pieces.rook = new Rook(colour);
+      }
+      pieces.rook->piece_counter++;
+      board[file][rank] = pieces.rook;
       file++;
       break;
     }
   case 'N':
     {
-      Knight* knight = new Knight(colour);
-      assert(knight);
-      board[file][rank] = knight;
+      if (pieces.knight == nullptr) {
+        pieces.knight = new Knight(colour);
+      }
+      pieces.knight->piece_counter++;
+      board[file][rank] = pieces.knight;
       file++;
       break;
     }
   case 'B':
     {
-      Bishop* bishop = new Bishop(colour);
-      assert(bishop);
-      board[file][rank] = bishop;
+      if (pieces.bishop == nullptr) {
+        pieces.bishop = new Bishop(colour);
+      }
+      pieces.bishop->piece_counter++;
+      board[file][rank] = pieces.bishop;
       file++;
       break;
     }
   case 'Q':
     {
-      Queen* queen = new Queen(colour);
-      assert(queen);
-      board[file][rank] = queen;
+      if (pieces.queen == nullptr) {
+        pieces.queen = new Queen(colour);
+      }
+      pieces.queen->piece_counter++;
+      board[file][rank] = pieces.queen;
       file++;
       break;
     }
   case 'K':
     {
-      King* king = new King(colour);
-      assert(king);
-      board[file][rank] = king;
+      if (pieces.king == nullptr) {
+        pieces.king = new King(colour);
+      }
+      pieces.king->piece_counter++;
+      board[file][rank] = pieces.king;
       file++;
       break;
     }
@@ -554,11 +614,13 @@ void ChessGame::make_move(Position start, Position end) {
 
   // Remove captured piece from board
   if (opponent != nullptr) {
-
-
-
-
-    delete opponent;
+    opponent->piece_counter--;
+    if (opponent->piece_counter == 0) {
+      if (game_state & BLACKS_TURN) {
+        delete_piece(black_pieces, opponent);
+      }
+      else delete_piece(white_pieces, opponent);
+    }
     opponent = nullptr;
   }
 

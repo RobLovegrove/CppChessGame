@@ -3,9 +3,17 @@
 
 #include <string>
 #include <cstdint>
+#include <optional>
+
 #include "ChessPiece.h"
 #include "Colour.h"
 #include "Position.h"
+#include "Pawn.h"
+#include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "Queen.h"
+#include "King.h"
 
 /*
 Most significant bit to least significant bit:
@@ -35,6 +43,23 @@ class ChessGame {
 
  private:
 
+  struct Pieces {
+    Pawn* pawn = nullptr;
+    Rook* rook = nullptr;
+    Knight* knight = nullptr;
+    Bishop* bishop = nullptr;
+    Queen* queen = nullptr;
+    King* king = nullptr;
+  };
+
+  struct Square {
+    ChessPiece* piece;
+    std::optional<Colour> colour;
+  };
+
+  Pieces black_pieces;
+  Pieces white_pieces;
+
   ChessPiece* board[8][8];
 
   /*
@@ -58,6 +83,10 @@ class ChessGame {
 
   /* LOAD GAME HELPER FUNCTIONS */
 
+  void reset_pieces(Pieces pieces);
+  void delete_pieces(Pieces pieces);
+  void delete_piece(Pieces pieces, ChessPiece* chess_piece);
+
   /*
     Method: load_position
 
@@ -77,7 +106,7 @@ class ChessGame {
     Adds piece corresponding to character passing colour into piece constructor
     Increments reference to loadState()'s file for each piece added
   */
-  void assign_piece(const char, int& file, const int rank, const Colour&);
+  void assign_piece(const char, int& file, const int rank, const Colour&, Pieces&);
 
   /*
     Method: loading_complete

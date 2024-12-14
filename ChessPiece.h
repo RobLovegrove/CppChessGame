@@ -10,6 +10,7 @@ class ChessPiece {
 /* - - - - - - - PRIVATE METHODS - - - - - - - -- - */
 
 private:
+
    /*
     Method: handle_rook_file_move
     Called by try_rook_moves
@@ -49,7 +50,7 @@ protected:
     Param:
       colour: Of type colour, sets colour of ChessPiece
   */
-  ChessPiece(Colour colour) : colour(colour) {};
+  ChessPiece(Colour colour) : colour(colour), piece_counter(0) {};
 
   /*
     Method: try_bishop_moves
@@ -87,6 +88,7 @@ protected:
 /* - - - - - - - - PUBLIC METHODS - - - - - - - -- - */
 
 public:
+  int piece_counter;  
   /*
     Method: Equal to operator overloading
 
